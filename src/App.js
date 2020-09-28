@@ -1,5 +1,6 @@
 import Axios from "axios";
 import React from "react";
+import "./App.css";
 
 class App extends React.Component {
   state = {
@@ -88,27 +89,14 @@ class App extends React.Component {
     );
   };
 
-  render() {
-    return (
-      <div className="App">
-        {this.renderNavbar()}
-        <div className="jumbotron jumbotron-fluid">
-          <div className="container">
-            {!this.state.authenticated ? (
-              <h1 class="display-4">Welcome</h1>
-            ) : (
-              <h1 class="display-4">Welcome, {this.state.user.name}</h1>
-            )}
-            <p class="lead">
-              to your twitter analysis app. View you tweets and stats.
-            </p>
-          </div>
-        </div>
+  renderTabs = () => {
+    if (this.state.authenticated) {
+      return (
         <div className="container">
-          <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
+          <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
+            <li className="nav-item" role="presentation">
               <a
-                class="nav-link active"
+                className="nav-link active"
                 id="home-tab"
                 data-toggle="tab"
                 href="#home"
@@ -119,9 +107,9 @@ class App extends React.Component {
                 Tweets
               </a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li className="nav-item" role="presentation">
               <a
-                class="nav-link"
+                className="nav-link"
                 id="profile-tab"
                 data-toggle="tab"
                 href="#profile"
@@ -132,9 +120,9 @@ class App extends React.Component {
                 Top User
               </a>
             </li>
-            <li class="nav-item" role="presentation">
+            <li className="nav-item" role="presentation">
               <a
-                class="nav-link"
+                className="nav-link"
                 id="contact-tab"
                 data-toggle="tab"
                 href="#contact"
@@ -146,9 +134,9 @@ class App extends React.Component {
               </a>
             </li>
           </ul>
-          <div class="tab-content" id="myTabContent">
+          <div className="tab-content" id="myTabContent">
             <div
-              class="tab-pane fade show active"
+              className="tab-pane fade show active"
               id="home"
               role="tabpanel"
               aria-labelledby="home-tab"
@@ -156,7 +144,7 @@ class App extends React.Component {
               t1, t2, t3, ...
             </div>
             <div
-              class="tab-pane fade"
+              className="tab-pane fade"
               id="profile"
               role="tabpanel"
               aria-labelledby="profile-tab"
@@ -164,7 +152,7 @@ class App extends React.Component {
               user1...
             </div>
             <div
-              class="tab-pane fade"
+              className="tab-pane fade"
               id="contact"
               role="tabpanel"
               aria-labelledby="contact-tab"
@@ -173,6 +161,33 @@ class App extends React.Component {
             </div>
           </div>
         </div>
+      );
+    } else {
+      return (
+        <div className="container">
+          <p>Sign in with your twitter account to start...</p>
+        </div>
+      );
+    }
+  };
+
+  render() {
+    return (
+      <div className="App">
+        {this.renderNavbar()}
+        <div className="jumbotron jumbotron-fluid">
+          <div className="container">
+            {!this.state.authenticated ? (
+              <h1 className="display-4">Welcome</h1>
+            ) : (
+              <h1 className="display-4">Welcome, {this.state.user.name}</h1>
+            )}
+            <p className="lead">
+              to your twitter analysis app. View you tweets and stats.
+            </p>
+          </div>
+        </div>
+        {this.renderTabs()}
       </div>
     );
   }

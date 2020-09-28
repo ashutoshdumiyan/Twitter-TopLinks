@@ -2,6 +2,7 @@ const passport = require("passport");
 const TwitterStrategy = require("passport-twitter");
 const keys = require("./keys");
 const User = require("../models/user-model");
+const Twit = require("twit");
 
 passport.use(
   new TwitterStrategy(
@@ -11,6 +12,19 @@ passport.use(
       callbackURL: "/auth/twitter/redirect",
     },
     async (token, tokenSecret, profile, done) => {
+      let T = new Twit({
+        consumer_key: keys.consumerkey,
+        consumer_secret: keys.consumersecret,
+        access_token: token,
+        access_token_secret: tokenSecret,
+      });
+      T.get("statuses/home_timeline", { count: 2 }, function (
+        err,
+        data,
+        response
+      ) {
+        console.log(data);
+      });
       const currentUser = await User.findOne({
         twitterId: profile._json.id_str,
       });

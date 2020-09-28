@@ -13,8 +13,14 @@
   "author": "Ashutosh Dumiyan",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.10.7"
+    "express-session": "^1.17.1",
+    "mongoose": "^5.10.7",
+    "passport": "^0.4.1",
+    "passport-twitter": "^1.0.4"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",

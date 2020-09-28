@@ -11,7 +11,7 @@ class App extends React.Component {
   componentDidMount() {
     Axios.get("/auth/login/success")
       .then((res) => {
-        console.log(res);
+        this.setState({ authenticated: true, user: res.data.user });
       })
       .catch((error) => {
         this.setState({
@@ -21,9 +21,46 @@ class App extends React.Component {
       });
   }
 
+  handleNotAuthenticated = () => {
+    this.setState({ authenticated: false });
+  };
+
+  handleLogin = () => {
+    window.open("http://localhost:5000/auth/twitter", "_self");
+  };
+
+  handleLogout = () => {
+    window.open("http://localhost:5000/auth/logout", "_self");
+    this.handleNotAuthenticated();
+  };
+
+  renderControl = () => {
+    if (this.state.authenticated === true) {
+      return (
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <button className="btn btn-primary" onClick={this.handleLogout}>
+              Logout
+            </button>
+          </li>
+        </ul>
+      );
+    } else {
+      return (
+        <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <button className="btn btn-primary" onClick={this.handleLogin}>
+              Login with Twitter
+            </button>
+          </li>
+        </ul>
+      );
+    }
+  };
+
   renderNavbar = () => {
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <span className="navbar-brand">Twitter TopLinks</span>
         <button
           className="navbar-toggler"
@@ -38,18 +75,14 @@ class App extends React.Component {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav mr-auto">
+          {/* <ul className="navbar-nav mr-auto">
             <li className="nav-item active">
               <a className="nav-link" href="/">
                 Home <span className="sr-only">(current)</span>
               </a>
             </li>
-          </ul>
-          <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <button className="btn btn-primary">Login with Twitter</button>
-            </li>
-          </ul>
+          </ul> */}
+          {this.renderControl()}
         </div>
       </nav>
     );
@@ -59,7 +92,87 @@ class App extends React.Component {
     return (
       <div className="App">
         {this.renderNavbar()}
-        <header className="App-header">hahaha</header>
+        <div className="jumbotron jumbotron-fluid">
+          <div className="container">
+            {!this.state.authenticated ? (
+              <h1 class="display-4">Welcome</h1>
+            ) : (
+              <h1 class="display-4">Welcome, {this.state.user.name}</h1>
+            )}
+            <p class="lead">
+              to your twitter analysis app. View you tweets and stats.
+            </p>
+          </div>
+        </div>
+        <div className="container">
+          <ul class="nav nav-pills nav-justified" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link active"
+                id="home-tab"
+                data-toggle="tab"
+                href="#home"
+                role="tab"
+                aria-controls="home"
+                aria-selected="true"
+              >
+                Tweets
+              </a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="profile-tab"
+                data-toggle="tab"
+                href="#profile"
+                role="tab"
+                aria-controls="profile"
+                aria-selected="false"
+              >
+                Top User
+              </a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a
+                class="nav-link"
+                id="contact-tab"
+                data-toggle="tab"
+                href="#contact"
+                role="tab"
+                aria-controls="contact"
+                aria-selected="false"
+              >
+                Top Domain
+              </a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div
+              class="tab-pane fade show active"
+              id="home"
+              role="tabpanel"
+              aria-labelledby="home-tab"
+            >
+              t1, t2, t3, ...
+            </div>
+            <div
+              class="tab-pane fade"
+              id="profile"
+              role="tabpanel"
+              aria-labelledby="profile-tab"
+            >
+              user1...
+            </div>
+            <div
+              class="tab-pane fade"
+              id="contact"
+              role="tabpanel"
+              aria-labelledby="contact-tab"
+            >
+              domain1...
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

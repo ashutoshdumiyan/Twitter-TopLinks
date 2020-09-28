@@ -1,0 +1,23 @@
+{
+  "name": "twittertoplinksbackend",
+  "version": "1.0.0",
+  "description": "Server for the Twitter TopLinks application.",
+  "main": "server.js",
+  "scripts": {
+    "client-install": "npm install --prefix ../",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix ../",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "author": "Ashutosh Dumiyan",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.7"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.4"
+  }
+}

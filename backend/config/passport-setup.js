@@ -18,11 +18,7 @@ passport.use(
         access_token: token,
         access_token_secret: tokenSecret,
       });
-      T.get("statuses/home_timeline", { count: 2 }, function (
-        err,
-        data,
-        response
-      ) {
+      T.get("statuses/home_timeline", { count: 2 }, (err, data, response) => {
         console.log(data);
       });
       const currentUser = await User.findOne({

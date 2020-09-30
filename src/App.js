@@ -1,5 +1,6 @@
 import Axios from "axios";
 import React from "react";
+import { TwitterTweetEmbed } from "react-twitter-embed";
 import "./App.css";
 
 class App extends React.Component {
@@ -7,6 +8,11 @@ class App extends React.Component {
     user: {},
     error: null,
     authenticated: false,
+    topuser: [
+      "Testing Account",
+      "Testing79716000",
+      "https://pbs.twimg.com/profile_images/1310587285172224005/2js9uPhT_normal.jpg",
+    ],
   };
 
   componentDidMount() {
@@ -39,6 +45,19 @@ class App extends React.Component {
     if (this.state.authenticated === true) {
       return (
         <ul className="navbar-nav ml-auto">
+          <li className="nav-item">
+            <a
+              href={`https://twitter.com/${this.state.user.screenName}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                className="profilepic2"
+                src={this.state.user.profileImageUrl}
+                alt="current user"
+              />
+            </a>
+          </li>
           <li className="nav-item">
             <button className="btn btn-primary" onClick={this.handleLogout}>
               Logout
@@ -76,13 +95,6 @@ class App extends React.Component {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          {/* <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <a className="nav-link" href="/">
-                Home <span className="sr-only">(current)</span>
-              </a>
-            </li>
-          </ul> */}
           {this.renderControl()}
         </div>
       </nav>
@@ -141,7 +153,8 @@ class App extends React.Component {
               role="tabpanel"
               aria-labelledby="home-tab"
             >
-              t1, t2, t3, ...
+              <TwitterTweetEmbed tweetId={"1311207287831363584"} />
+              <TwitterTweetEmbed tweetId={"1311207287831363584"} />
             </div>
             <div
               className="tab-pane fade"
@@ -149,7 +162,30 @@ class App extends React.Component {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              user1...
+              <h2 style={{ textAlign: "center", color: "#309eb6" }}>
+                User with the most links shared is:
+              </h2>
+              <div style={{ textAlign: "center", marginTop: "20px" }}>
+                <img
+                  className="profilepic"
+                  src={this.state.topuser[2]}
+                  alt="Profile"
+                />
+                <span>{this.state.topuser[0]}</span>
+                <br />
+                <br />
+                <a
+                  href={`https://twitter.com/${this.state.topuser[1]}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="https://abs.twimg.com/favicons/twitter.ico"
+                    alt="profile link"
+                  />
+                  Go to Twitter profile
+                </a>
+              </div>
             </div>
             <div
               className="tab-pane fade"
@@ -157,7 +193,47 @@ class App extends React.Component {
               role="tabpanel"
               aria-labelledby="contact-tab"
             >
-              domain1...
+              <h2 style={{ textAlign: "center", color: "#309eb6" }}>
+                The top shared domains are:
+              </h2>
+              <div className="list-group">
+                <a href="/" className="list-group-item list-group-item-action">
+                  Cras justo odio
+                  <span
+                    style={{ float: "right" }}
+                    className="badge badge-primary badge-pill bpill"
+                  >
+                    14
+                  </span>
+                </a>
+                <a href="/" className="list-group-item list-group-item-action">
+                  Dapibus ac facilisis in
+                  <span
+                    style={{ float: "right" }}
+                    className="badge badge-primary badge-pill bpill"
+                  >
+                    12
+                  </span>
+                </a>
+                <a href="/" className="list-group-item list-group-item-action">
+                  Morbi leo risus
+                  <span
+                    style={{ float: "right" }}
+                    className="badge badge-primary badge-pill bpill"
+                  >
+                    9
+                  </span>
+                </a>
+                <a href="/" className="list-group-item list-group-item-action">
+                  Porta ac consectetur ac
+                  <span
+                    style={{ float: "right" }}
+                    className="badge badge-primary badge-pill bpill"
+                  >
+                    5
+                  </span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -1,24 +1,54 @@
 import Axios from "axios";
 import React from "react";
-import { TwitterTweetEmbed } from "react-twitter-embed";
+import { ToastContainer, Zoom, toast } from "react-toastify";
+// import { TwitterTweetEmbed } from "react-twitter-embed";
+import Pagination from "react-pagination-js";
+import "react-pagination-js/dist/styles.css";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import Loader from "./Loader";
+import Tweet from "./Tweet";
 
 class App extends React.Component {
   state = {
     user: {},
     error: null,
     authenticated: false,
-    topuser: [
-      "Testing Account",
-      "Testing79716000",
-      "https://pbs.twimg.com/profile_images/1310587285172224005/2js9uPhT_normal.jpg",
-    ],
+    topuser: [],
+    loading: false,
+    currItems: [],
+    tweets: [],
+    currentPage: 0,
   };
 
   componentDidMount() {
     Axios.get("/auth/login/success")
       .then((res) => {
-        this.setState({ authenticated: true, user: res.data.user });
+        this.setState({
+          authenticated: true,
+          user: res.data.user,
+          loading: true,
+        });
+        this.notify(
+          "If your friends list is large, it may take some time to load you data. So, be patient."
+        );
+        Axios.get("/tweets").then((res) => {
+          this.setState({ loading: false });
+          this.notify("Your data has been fetched");
+          console.log(res.data.tweets);
+          let temp = [];
+          res.data.tweets.forEach((val, index) => {
+            val.tweets.forEach((vl, ind) => {
+              temp.push(vl);
+            });
+          });
+          let rs = [];
+          let tp = temp.slice(0, 10);
+          tp.forEach((val, index) => {
+            rs.push(<Tweet key={index} data={val} />);
+          });
+          this.setState({ tweets: temp, currItems: rs, currentPage: 1 });
+        });
       })
       .catch((error) => {
         this.setState({
@@ -37,8 +67,19 @@ class App extends React.Component {
   };
 
   handleLogout = () => {
+    Axios.post("/tweets")
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     window.open("http://localhost:5000/auth/logout", "_self");
     this.handleNotAuthenticated();
+  };
+
+  notify = (text) => {
+    toast(text);
   };
 
   renderControl = () => {
@@ -101,6 +142,37 @@ class App extends React.Component {
     );
   };
 
+  changeCurrentPage = (numPage) => {
+    // const pg = this.state.currentPage;
+    let temp = this.state.tweets.slice(numPage * 10 - 10, numPage * 10);
+    // console.log(pg, temp);
+    let res = [];
+    temp.forEach((val, index) => {
+      res.push(<Tweet key={index} data={val} />);
+    });
+    this.setState({ currentPage: numPage, currItems: res });
+  };
+
+  renderTweets = () => {
+    if (this.state.loading === true) {
+      return <Loader />;
+    } else {
+      const l = this.state.tweets.length;
+      return (
+        <React.Fragment>
+          {this.state.currItems}
+          <Pagination
+            currentPage={this.state.currentPage}
+            totalSize={l}
+            sizePerPage={10}
+            changeCurrentPage={this.changeCurrentPage}
+            theme="bootstrap"
+          />
+        </React.Fragment>
+      );
+    }
+  };
+
   renderTabs = () => {
     if (this.state.authenticated) {
       return (
@@ -153,8 +225,7 @@ class App extends React.Component {
               role="tabpanel"
               aria-labelledby="home-tab"
             >
-              <TwitterTweetEmbed tweetId={"1311207287831363584"} />
-              <TwitterTweetEmbed tweetId={"1311207287831363584"} />
+              {this.renderTweets()}
             </div>
             <div
               className="tab-pane fade"
@@ -264,6 +335,7 @@ class App extends React.Component {
           </div>
         </div>
         {this.renderTabs()}
+        <ToastContainer draggable={false} transition={Zoom} autoClose={6000} />
       </div>
     );
   }

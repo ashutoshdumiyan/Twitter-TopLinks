@@ -1,6 +1,6 @@
 const twitter = {
-  consumerkey: "NAAAQhxhhEwHc3Er10dzrovJk",
-  consumersecret: "qSEs1DHnFV3xb4nF0HqA5h5pQo9KknaKnIjQr9OqQRqS5m2T89",
+  consumerkey: "X9Nw89uflL06qC8E7o0HycAJO",
+  consumersecret: "A6LRxU01UfPwmTTBne1eN2eenN3HQ338pgx7u2HkjqqFIuiiDD",
 };
 
 const mongodb = {

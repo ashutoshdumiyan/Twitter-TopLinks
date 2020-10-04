@@ -7,6 +7,7 @@ const passport = require("passport");
 const cors = require("cors");
 const keys = require("./config/keys");
 const authRoutes = require("./routes/auth-routes");
+const tweetRoutes = require("./routes/tweet-routes");
 const passportSetup = require("./config/passport-setup");
 const app = express();
 
@@ -44,26 +45,7 @@ app.use(
 );
 
 app.use("/auth", authRoutes);
-
-const authCheck = (req, res, next) => {
-  if (!req.user) {
-    res.status(401).json({
-      authenticated: false,
-      message: "user has not been authenticated",
-    });
-  } else {
-    next();
-  }
-};
-
-app.get("/", authCheck, (req, res) => {
-  res.status(200).json({
-    authenticated: true,
-    message: "authentication successful",
-    user: req.user,
-    cookies: req.cookies,
-  });
-});
+app.use("/tweets", tweetRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -10,12 +10,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  try {
-    Tweets.deleteMany({ userid: req.user.twitterId });
-  } catch (error) {
-    res.json({ error });
-  }
+router.delete("/", async (req, res) => {
+  Tweets.remove({ userid: req.user.twitterId }, (err, data) => {
+    if (!err) {
+      console.log(data);
+    }
+  });
 });
 
 module.exports = router;

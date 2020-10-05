@@ -1,13 +1,15 @@
 import Axios from "axios";
 import React from "react";
 import { ToastContainer, Zoom, toast } from "react-toastify";
-// import { TwitterTweetEmbed } from "react-twitter-embed";
 import Pagination from "react-pagination-js";
+import Loader from "./Loader";
+import Tweet from "./Tweet";
+import TopUser from "./TopUser";
+import TopLinks from "./TopLinks";
+import Pills from "./Pills";
 import "react-pagination-js/dist/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import Loader from "./Loader";
-import Tweet from "./Tweet";
 
 class App extends React.Component {
   state = {
@@ -19,6 +21,8 @@ class App extends React.Component {
     currItems: [],
     tweets: [],
     currentPage: 0,
+    topcount: 0,
+    toplinks: [],
   };
 
   componentDidMount() {
@@ -33,21 +37,33 @@ class App extends React.Component {
           "If your friends list is large, it may take some time to load you data. So, be patient."
         );
         Axios.get("/tweets").then((res) => {
-          this.setState({ loading: false });
-          this.notify("Your data has been fetched");
           console.log(res.data.tweets);
+          if (res.data.tweets.length === 0) {
+            setTimeout(function () {
+              window.location.reload();
+            }, 5000);
+          }
           let temp = [];
           res.data.tweets.forEach((val, index) => {
             val.tweets.forEach((vl, ind) => {
               temp.push(vl);
             });
           });
+          const ob = this.analyseTweets(temp);
           let rs = [];
           let tp = temp.slice(0, 10);
           tp.forEach((val, index) => {
             rs.push(<Tweet key={index} data={val} />);
           });
-          this.setState({ tweets: temp, currItems: rs, currentPage: 1 });
+          this.setState({
+            loading: false,
+            tweets: temp,
+            currItems: rs,
+            currentPage: 1,
+            topuser: ob.topuser,
+            topcount: ob.topcount,
+            toplinks: ob.toplinks,
+          });
         });
       })
       .catch((error) => {
@@ -58,6 +74,67 @@ class App extends React.Component {
       });
   }
 
+  domain_from_url = (url) => {
+    let result;
+    let match;
+    if (
+      (match = url.match(
+        // eslint-disable-next-line
+        /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im
+      ))
+    ) {
+      result = match[1];
+      // eslint-disable-next-line
+      if ((match = result.match(/^[^\.]+\.(.+\..+)$/))) {
+        result = match[1];
+      }
+    }
+    return result;
+  };
+
+  analyseTweets = (tweets) => {
+    let userobj = new Map();
+    let linkobj = new Map();
+    tweets.forEach((val, index) => {
+      if (val.entities.urls.length > 0) {
+        val.entities.urls.forEach((vl, ind) => {
+          if (vl.display_url.slice(0, 24) !== "twitter.com/i/web/status") {
+            const key = this.domain_from_url(vl.expanded_url).toLowerCase();
+            if (linkobj.has(key)) {
+              linkobj.set(key, linkobj.get(key) + 1);
+            } else {
+              linkobj.set(key, 1);
+            }
+            const obj = {
+              name: val.user.name,
+              screen_name: val.user.screen_name,
+              pic: val.user.profile_image_url_https,
+            };
+            if (userobj.has(obj.screen_name)) {
+              userobj.set(obj.screen_name, [
+                obj,
+                userobj.get(obj.screen_name)[1] + 1,
+              ]);
+            } else {
+              userobj.set(obj.screen_name, [obj, 1]);
+            }
+          }
+        });
+      }
+    });
+    let m = 0;
+    let obj = {};
+    userobj.forEach((user, index) => {
+      const curr = user[0];
+      const count = user[1];
+      if (count > m) {
+        m = count;
+        obj = curr;
+      }
+    });
+    return { topuser: obj, topcount: m, toplinks: linkobj };
+  };
+
   handleNotAuthenticated = () => {
     this.setState({ authenticated: false });
   };
@@ -67,7 +144,7 @@ class App extends React.Component {
   };
 
   handleLogout = () => {
-    Axios.post("/tweets")
+    Axios.delete("/tweets")
       .then((res) => {
         console.log(res);
       })
@@ -82,7 +159,7 @@ class App extends React.Component {
     toast(text);
   };
 
-  renderControl = () => {
+  renderButton = () => {
     if (this.state.authenticated === true) {
       return (
         <ul className="navbar-nav ml-auto">
@@ -136,16 +213,14 @@ class App extends React.Component {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          {this.renderControl()}
+          {this.renderButton()}
         </div>
       </nav>
     );
   };
 
   changeCurrentPage = (numPage) => {
-    // const pg = this.state.currentPage;
     let temp = this.state.tweets.slice(numPage * 10 - 10, numPage * 10);
-    // console.log(pg, temp);
     let res = [];
     temp.forEach((val, index) => {
       res.push(<Tweet key={index} data={val} />);
@@ -173,51 +248,29 @@ class App extends React.Component {
     }
   };
 
+  renderTopUser = () => {
+    if (this.state.loading === true) {
+      return <Loader />;
+    } else {
+      return (
+        <TopUser data={this.state.topuser} topcount={this.state.topcount} />
+      );
+    }
+  };
+
+  renderTopLinks = () => {
+    if (this.state.loading === true) {
+      return <Loader />;
+    } else {
+      return <TopLinks data={this.state.toplinks} />;
+    }
+  };
+
   renderTabs = () => {
     if (this.state.authenticated) {
       return (
         <div className="container">
-          <ul className="nav nav-pills nav-justified" id="myTab" role="tablist">
-            <li className="nav-item" role="presentation">
-              <a
-                className="nav-link active"
-                id="home-tab"
-                data-toggle="tab"
-                href="#home"
-                role="tab"
-                aria-controls="home"
-                aria-selected="true"
-              >
-                Tweets
-              </a>
-            </li>
-            <li className="nav-item" role="presentation">
-              <a
-                className="nav-link"
-                id="profile-tab"
-                data-toggle="tab"
-                href="#profile"
-                role="tab"
-                aria-controls="profile"
-                aria-selected="false"
-              >
-                Top User
-              </a>
-            </li>
-            <li className="nav-item" role="presentation">
-              <a
-                className="nav-link"
-                id="contact-tab"
-                data-toggle="tab"
-                href="#contact"
-                role="tab"
-                aria-controls="contact"
-                aria-selected="false"
-              >
-                Top Domain
-              </a>
-            </li>
-          </ul>
+          <Pills />
           <div className="tab-content" id="myTabContent">
             <div
               className="tab-pane fade show active"
@@ -233,30 +286,7 @@ class App extends React.Component {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              <h2 style={{ textAlign: "center", color: "#309eb6" }}>
-                User with the most links shared is:
-              </h2>
-              <div style={{ textAlign: "center", marginTop: "20px" }}>
-                <img
-                  className="profilepic"
-                  src={this.state.topuser[2]}
-                  alt="Profile"
-                />
-                <span>{this.state.topuser[0]}</span>
-                <br />
-                <br />
-                <a
-                  href={`https://twitter.com/${this.state.topuser[1]}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="https://abs.twimg.com/favicons/twitter.ico"
-                    alt="profile link"
-                  />
-                  Go to Twitter profile
-                </a>
-              </div>
+              {this.renderTopUser()}
             </div>
             <div
               className="tab-pane fade"
@@ -264,47 +294,7 @@ class App extends React.Component {
               role="tabpanel"
               aria-labelledby="contact-tab"
             >
-              <h2 style={{ textAlign: "center", color: "#309eb6" }}>
-                The top shared domains are:
-              </h2>
-              <div className="list-group">
-                <a href="/" className="list-group-item list-group-item-action">
-                  Cras justo odio
-                  <span
-                    style={{ float: "right" }}
-                    className="badge badge-primary badge-pill bpill"
-                  >
-                    14
-                  </span>
-                </a>
-                <a href="/" className="list-group-item list-group-item-action">
-                  Dapibus ac facilisis in
-                  <span
-                    style={{ float: "right" }}
-                    className="badge badge-primary badge-pill bpill"
-                  >
-                    12
-                  </span>
-                </a>
-                <a href="/" className="list-group-item list-group-item-action">
-                  Morbi leo risus
-                  <span
-                    style={{ float: "right" }}
-                    className="badge badge-primary badge-pill bpill"
-                  >
-                    9
-                  </span>
-                </a>
-                <a href="/" className="list-group-item list-group-item-action">
-                  Porta ac consectetur ac
-                  <span
-                    style={{ float: "right" }}
-                    className="badge badge-primary badge-pill bpill"
-                  >
-                    5
-                  </span>
-                </a>
-              </div>
+              {this.renderTopLinks()}
             </div>
           </div>
         </div>

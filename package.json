@@ -11,8 +11,7 @@
     "react-dom": "^16.13.1",
     "react-pagination-js": "^2.0.0",
     "react-scripts": "3.4.3",
-    "react-toastify": "^6.0.8",
-    "react-twitter-embed": "^3.0.3"
+    "react-toastify": "^6.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

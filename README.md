@@ -11,7 +11,7 @@ Visit the website [here](https://intense-beyond-79161.herokuapp.com/) and give a
 - Your tweets after the loading is complete.<br/><br/>
   ![Tweets](https://i.imgur.com/arceyfU.png)
 - Some more tweets after you scroll down <br/><br/>
-  ![More Tweets](https://i.imgur.com/jJXos6c.png)
+  ![More Tweets](https://i.imgur.com/DUU4nHZ.png)
 - The Top User tab. <br/><br/>
   ![Top User](https://i.imgur.com/ZbuDrNO.png)
 - The Top Links tab. <br/><br/>

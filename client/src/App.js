@@ -40,7 +40,6 @@ class App extends React.Component {
         );
         // Fetch tweets of authenticated user from backend
         Axios.get("/tweets").then((res) => {
-          console.log(res.data.tweets);
           if (res.data.tweets.length === 0) {
             setTimeout(function () {
               window.location.reload();

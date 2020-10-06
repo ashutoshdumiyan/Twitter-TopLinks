@@ -1,38 +1,32 @@
 {
-  "name": "twitter-toplinks",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.20.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-pagination-js": "^2.0.0",
-    "react-scripts": "3.4.3",
-    "react-toastify": "^6.0.8"
-  },
+  "name": "twittertoplinksbackend",
+  "version": "1.0.0",
+  "description": "Server for the Twitter TopLinks application.",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "client-install": "npm install --prefix ../",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "author": "Ashutosh Dumiyan",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "moment": "^2.29.0",
+    "mongoose": "^5.10.7",
+    "passport": "^0.4.1",
+    "passport-twitter": "^1.0.4",
+    "twit": "^2.2.11"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "proxy": "http://localhost:5000/"
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.4"
+  }
 }

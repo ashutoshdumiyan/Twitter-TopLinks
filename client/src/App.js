@@ -140,7 +140,10 @@ class App extends React.Component {
   };
 
   handleLogin = () => {
-    window.open("http://localhost:5000/auth/twitter", "_self");
+    window.open(
+      "https://intense-beyond-79161.herokuapp.com/auth/twitter",
+      "_self"
+    );
   };
 
   handleLogout = () => {
@@ -151,7 +154,10 @@ class App extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    window.open("http://localhost:5000/auth/logout", "_self");
+    window.open(
+      "https://intense-beyond-79161.herokuapp.com/auth/logout",
+      "_self"
+    );
     this.handleNotAuthenticated();
   };
 

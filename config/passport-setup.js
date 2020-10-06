@@ -36,7 +36,7 @@ passport.use(
 
             T.get(
               "statuses/user_timeline",
-              { user_id: id, count: 3200 },
+              { user_id: id, count: 200 },
               (error, data, res) => {
                 counter++;
                 for (let j = 0; j < data.length; j++) {

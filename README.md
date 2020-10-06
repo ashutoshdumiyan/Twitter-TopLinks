@@ -18,6 +18,9 @@ Visit the website [here](https://intense-beyond-79161.herokuapp.com/) and give a
   ![Top Links](https://i.imgur.com/2nOQzTl.png)
   After this, you can logout by clicking in the top-right corner.
 
+## Issues
+When the user profile is huge (i.e a very large friends list) the fetching the data from twitter may take a lot of time. In that case, the application will kepp refreshing every 5 seconds until it eventually gets the data.
+
 ## Technologies Used
 
 - [React](https://reactjs.org/) for user interface.<br/>

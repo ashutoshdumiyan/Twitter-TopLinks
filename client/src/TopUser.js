@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+// The Top User component
+// Displays the top user (user who has shared most links)
+// Receives props from App component and simply displays the user in a nice layout
 class TopUser extends Component {
   render() {
     const { data, topcount } = this.props;

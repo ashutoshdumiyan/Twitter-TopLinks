@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+// The Pills component (which shows the three tabs of Tweets, Top User and Top Domain)
+// Returns simple JSX
 class Pills extends Component {
   render() {
     return (

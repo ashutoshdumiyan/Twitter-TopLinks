@@ -6,6 +6,7 @@ const User = require("../models/user-model");
 const Tweets = require("../models/tweet-model");
 const Twit = require("twit");
 
+// Passport twitter strategy
 passport.use(
   new TwitterStrategy(
     {
@@ -15,67 +16,14 @@ passport.use(
         "https://intense-beyond-79161.herokuapp.com/auth/twitter/redirect",
     },
     async (token, tokenSecret, profile, done) => {
+      // Initialize twit
       let T = new Twit({
         consumer_key: keys.consumerkey,
         consumer_secret: keys.consumersecret,
         access_token: token,
         access_token_secret: tokenSecret,
       });
-      // let totalTweets = [];
-
-      // T.get(
-      //   "friends/ids",
-      //   { user_id: profile._json.id_str, stringify_ids: true, count: 20 },
-      //   (err, data1, response) => {
-      //     data1.ids.push(profile._json.id_str);
-      //     const l = data1.ids.length;
-
-      //     let counter = 0;
-      //     for (let i = 0; i < l; i++) {
-      //       const id = data1.ids[i];
-
-      //       T.get(
-      //         "statuses/user_timeline",
-      //         { user_id: id, count: 200 },
-      //         (error, data, res) => {
-      //           counter++;
-      //           for (let j = 0; j < data.length; j++) {
-      //             let date = moment(
-      //               data[j].created_at,
-      //               "dd MMM DD HH:mm:ss ZZ YYYY",
-      //               "en"
-      //             );
-
-      //             let date1 = new Date();
-      //             let date2 = moment(date1, "dd MMM DD HH:mm:ss ZZ YYYY", "en");
-      //             let change = date2.diff(date, "days");
-      //             if (change < 7) {
-      //               totalTweets.push(data[j]);
-      //             }
-      //           }
-      //           if (totalTweets.length > 0 && counter === i) {
-      //             console.log(totalTweets.length);
-      //             if (totalTweets.length <= 1000) {
-      //               new Tweets({
-      //                 userid: profile._json.id_str,
-      //                 tweets: totalTweets,
-      //               }).save();
-      //             } else {
-      //               for (let u = 0; u < totalTweets.length; u += 1000) {
-      //                 let temparr = totalTweets.slice(u, u + 1000);
-      //                 new Tweets({
-      //                   userid: profile._json.id_str,
-      //                   tweets: temparr,
-      //                 }).save();
-      //               }
-      //             }
-      //           }
-      //         }
-      //       );
-      //     }
-      //   }
-      // );
-
+      // Fetch user's tweets from twitter using twit
       T.get(
         "statuses/home_timeline",
         { count: 1000 },
@@ -87,6 +35,8 @@ passport.use(
               "dd MMM DD HH:mm:ss ZZ YYYY",
               "en"
             );
+            // Filter tweets according to date
+            // Take only past 7 days' tweets
             let date1 = new Date();
             let date2 = moment(date1, "dd MMM DD HH:mm:ss ZZ YYYY", "en");
             let change = date2.diff(date, "days");
@@ -95,6 +45,7 @@ passport.use(
               tweets.push(val);
             }
           });
+          // Save tweets in the database
           await new Tweets({
             userid: profile._json.id_str,
             tweets: tweets,
@@ -102,9 +53,11 @@ passport.use(
         }
       );
 
+      // Find user if already exists
       const currentUser = await User.findOne({
         twitterId: profile._json.id_str,
       });
+      // Save user in the database
       if (!currentUser) {
         const newUser = await new User({
           name: profile._json.name,

@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 class App extends React.Component {
+  // The whole state of our application
   state = {
     user: {},
     error: null,
@@ -26,6 +27,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    // Check the user's authentication status
     Axios.get("/auth/login/success")
       .then((res) => {
         this.setState({
@@ -36,6 +38,7 @@ class App extends React.Component {
         this.notify(
           "If your friends list is large, it may take some time to load you data. So, be patient."
         );
+        // Fetch tweets of authenticated user from backend
         Axios.get("/tweets").then((res) => {
           console.log(res.data.tweets);
           if (res.data.tweets.length === 0) {
@@ -49,6 +52,7 @@ class App extends React.Component {
               temp.push(vl);
             });
           });
+          // Analyse tweets for top user and top links
           const ob = this.analyseTweets(temp);
           let rs = [];
           let tp = temp.slice(0, 10);
@@ -74,6 +78,8 @@ class App extends React.Component {
       });
   }
 
+  // Function to extract domain from a url using regex
+
   domain_from_url = (url) => {
     let result;
     let match;
@@ -91,6 +97,9 @@ class App extends React.Component {
     }
     return result;
   };
+
+  // Function to analyse tweets for top user and top links
+  // Finds out the top user and the top links shared
 
   analyseTweets = (tweets) => {
     let userobj = new Map();
@@ -135,9 +144,13 @@ class App extends React.Component {
     return { topuser: obj, topcount: m, toplinks: linkobj };
   };
 
+  // Function to change state of our application if user is not authenticated
+
   handleNotAuthenticated = () => {
     this.setState({ authenticated: false });
   };
+
+  // Function to handle button click on "Login with Twitter"
 
   handleLogin = () => {
     window.open(
@@ -145,6 +158,8 @@ class App extends React.Component {
       "_self"
     );
   };
+
+  // Function to handle button click on "Logout"
 
   handleLogout = () => {
     Axios.delete("/tweets")
@@ -161,9 +176,15 @@ class App extends React.Component {
     this.handleNotAuthenticated();
   };
 
+  // Show toast notification
+
   notify = (text) => {
     toast(text);
   };
+
+  // Render the Login/Logout button according to user's authenticated state
+  // If authenticated - show Logout button
+  // Else - show Login button
 
   renderButton = () => {
     if (this.state.authenticated === true) {
@@ -202,6 +223,9 @@ class App extends React.Component {
     }
   };
 
+  // Simple function which renders the Navbar
+  // Returns simple JSX
+
   renderNavbar = () => {
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -225,6 +249,9 @@ class App extends React.Component {
     );
   };
 
+  // Function to change current page in Tweets tab
+  // Used by the pagination library
+
   changeCurrentPage = (numPage) => {
     let temp = this.state.tweets.slice(numPage * 10 - 10, numPage * 10);
     let res = [];
@@ -233,6 +260,9 @@ class App extends React.Component {
     });
     this.setState({ currentPage: numPage, currItems: res });
   };
+
+  // Function to render tweets inside of the "Tweets" tab
+  // Displays tweets and the pagination component
 
   renderTweets = () => {
     if (this.state.loading === true) {
@@ -254,6 +284,8 @@ class App extends React.Component {
     }
   };
 
+  // Function to display the top user under the "Top User" tab
+
   renderTopUser = () => {
     if (this.state.loading === true) {
       return <Loader />;
@@ -264,6 +296,8 @@ class App extends React.Component {
     }
   };
 
+  // Function to display the top links under the "Top Links" tab
+
   renderTopLinks = () => {
     if (this.state.loading === true) {
       return <Loader />;
@@ -271,6 +305,9 @@ class App extends React.Component {
       return <TopLinks data={this.state.toplinks} />;
     }
   };
+
+  // Function to display all three tabs
+  // Return simple JSX along with the required data (tweets, top user, top links)
 
   renderTabs = () => {
     if (this.state.authenticated) {
@@ -313,6 +350,10 @@ class App extends React.Component {
       );
     }
   };
+
+  // The main render function of our component
+  // Groups whole application together
+  // Returns JSX which is then returned to index.js and then it's displayed
 
   render() {
     return (

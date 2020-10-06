@@ -12,6 +12,7 @@ const passportSetup = require("./config/passport-setup");
 const app = express();
 const path = require("path");
 
+// Connect to MongoDB Atlas cloud database
 mongoose.connect(
   keys.dbURI,
   {
@@ -24,6 +25,7 @@ mongoose.connect(
   }
 );
 
+// Use the cookie session middleware
 app.use(
   cookieSession({
     name: "session",
@@ -32,11 +34,14 @@ app.use(
   })
 );
 
+// Use the cookie parser middleware
 app.use(cookieParser());
 
+// Initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Set up CORS
 app.use(
   cors({
     origin: "https://intense-beyond-79161.herokuapp.com",
@@ -45,6 +50,7 @@ app.use(
   })
 );
 
+// Import our routes
 app.use("/auth", authRoutes);
 app.use("/tweets", tweetRoutes);
 
@@ -57,6 +63,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+// Set server port number
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`);

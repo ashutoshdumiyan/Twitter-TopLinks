@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+// The Tweet component
+// This displays a single tweet under the Tweets tab
+// Takes props from App component and simply displays them in a nice layout
 class Tweet extends Component {
   render() {
     const tweet = this.props.data;

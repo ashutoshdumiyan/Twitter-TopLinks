@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+// The Top Links compoonent
+// This displays the list of top links shared by users
+// Simply recieves props from App component and displays the list of links
 class TopLinks extends Component {
   renderList = (list) => {
     let res = [];
@@ -25,6 +28,7 @@ class TopLinks extends Component {
     return res;
   };
   render() {
+    // Sort the list according to number of links shared in descending order
     const { data } = this.props;
     let sortable = [];
     for (let [key, value] of data) {

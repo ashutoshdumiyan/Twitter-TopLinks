@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+// A nice looking loading animation component
 class Loader extends Component {
   render() {
     return (

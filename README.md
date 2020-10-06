@@ -9,7 +9,7 @@ Visit the website [here](https://intense-beyond-79161.herokuapp.com/) and give a
 - Loading screen (after clicking on the Login button in the top right corner)<br/><br/>
   ![Loading](https://i.imgur.com/8O6idFB.png)
 - Your tweets after the loading is complete.<br/><br/>
-  ![Tweets](https://i.imgur.com/arceyfU.png)
+  ![Tweets](https://i.imgur.com/TbzlyNv.png)
 - Some more tweets after you scroll down <br/><br/>
   ![More Tweets](https://i.imgur.com/DUU4nHZ.png)
 - The Top User tab. <br/><br/>

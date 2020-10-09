@@ -26,7 +26,7 @@ router.get("/login/failed", (req, res) => {
 // Logout the user and then redirect
 router.get("/logout", (req, res) => {
   req.logout();
-  res.redirect("https://intense-beyond-79161.herokuapp.com");
+  res.redirect("http://localhost:3000/");
 });
 
 // Authenticate user from twitter using passport
@@ -36,7 +36,7 @@ router.get("/twitter", passport.authenticate("twitter"));
 router.get(
   "/twitter/redirect",
   passport.authenticate("twitter", {
-    successRedirect: "https://intense-beyond-79161.herokuapp.com",
+    successRedirect: "http://localhost:3000/",
     failureRedirect: "/auth/login/failed",
   })
 );

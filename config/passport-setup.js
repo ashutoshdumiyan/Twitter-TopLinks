@@ -12,8 +12,7 @@ passport.use(
     {
       consumerKey: keys.consumerkey,
       consumerSecret: keys.consumersecret,
-      callbackURL:
-        "https://intense-beyond-79161.herokuapp.com/auth/twitter/redirect",
+      callbackURL: "http://localhost:5000/auth/twitter/redirect",
     },
     async (token, tokenSecret, profile, done) => {
       // Initialize twit

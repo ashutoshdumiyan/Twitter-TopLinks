@@ -44,7 +44,7 @@ app.use(passport.session());
 // Set up CORS
 app.use(
   cors({
-    origin: "https://intense-beyond-79161.herokuapp.com",
+    origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })

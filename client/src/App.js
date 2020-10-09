@@ -22,7 +22,6 @@ class App extends React.Component {
     currItems: [],
     tweets: [],
     currentPage: 0,
-    topcount: 0,
     toplinks: [],
   };
 
@@ -64,7 +63,6 @@ class App extends React.Component {
             currItems: rs,
             currentPage: 1,
             topuser: ob.topuser,
-            topcount: ob.topcount,
             toplinks: ob.toplinks,
           });
         });
@@ -140,7 +138,7 @@ class App extends React.Component {
         obj = curr;
       }
     });
-    return { topuser: obj, topcount: m, toplinks: linkobj };
+    return { topuser: userobj, toplinks: linkobj };
   };
 
   // Function to change state of our application if user is not authenticated
@@ -152,10 +150,7 @@ class App extends React.Component {
   // Function to handle button click on "Login with Twitter"
 
   handleLogin = () => {
-    window.open(
-      "https://intense-beyond-79161.herokuapp.com/auth/twitter",
-      "_self"
-    );
+    window.open("http://localhost:5000/auth/twitter", "_self");
   };
 
   // Function to handle button click on "Logout"
@@ -168,10 +163,7 @@ class App extends React.Component {
       .catch((err) => {
         console.log(err);
       });
-    window.open(
-      "https://intense-beyond-79161.herokuapp.com/auth/logout",
-      "_self"
-    );
+    window.open("http://localhost:5000/auth/logout", "_self");
     this.handleNotAuthenticated();
   };
 
@@ -289,9 +281,7 @@ class App extends React.Component {
     if (this.state.loading === true) {
       return <Loader />;
     } else {
-      return (
-        <TopUser data={this.state.topuser} topcount={this.state.topcount} />
-      );
+      return <TopUser data={this.state.topuser} />;
     }
   };
 

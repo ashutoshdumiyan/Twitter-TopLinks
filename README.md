@@ -25,6 +25,7 @@ When the user profile is huge (a very large friends list) then fetching the data
 
 - [React](https://reactjs.org/) for user interface.<br/>
 - [Bootstrap](https://getbootstrap.com/) for frontend design.<br/>
+- [MongoDB](https://www.mongodb.com/) as the databse.<br/>
 - [Node.js](https://nodejs.org/) for backend.<br/>
 - [Twitter API](https://developer.twitter.com/en/products/twitter-api) to fetch user's data from Twitter.
 - [Heroku](https://heroku.com/) for deployment.

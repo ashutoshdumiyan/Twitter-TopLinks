@@ -39,12 +39,13 @@ class App extends React.Component {
         );
         // Fetch tweets of authenticated user from backend
         Axios.get("/tweets").then((res) => {
-          if (res.data.tweets.length === 0) {
-            setTimeout(function () {
-              window.location.reload();
-            }, 5000);
-          }
+          // if (res.data.tweets.length === 0) {
+          //   setTimeout(function () {
+          //     window.location.reload();
+          //   }, 5000);
+          // }
           let temp = [];
+          console.log(res.data)
           res.data.tweets.forEach((val, index) => {
             val.tweets.forEach((vl, ind) => {
               temp.push(vl);
